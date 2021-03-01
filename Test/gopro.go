@@ -57,8 +57,10 @@ import (
 
 func main() {
 	chs := [11]chan struct{}{}
+
+	chs[0] = make(chan struct{})
 	for i := 0; i < 10; i++ {
-		chs[i] = make(chan struct{})
+		chs[i+1] = make(chan struct{})
 		go func(i int) {
 			//从通道中取出元素，才往下执行，否则一直阻塞等待
 			<-chs[i]
@@ -72,7 +74,6 @@ func main() {
 	chs[0] <- struct{}{}
 	//取出通道中最后一个未被取出的值
 	<-chs[10]
-	close(chs[10])
 
 	return
 }
