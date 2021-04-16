@@ -23,3 +23,17 @@ func TestHeapSort(t *testing.T) {
 	HeapSort(nums)
 	fmt.Println(nums)
 }
+
+func TestFind(t *testing.T) {
+	nums := []int{1, 1, 1, 3}
+	// target := 3
+	// ans := findNum(nums, 1)
+	// fmt.Println(ans)
+	for i := 0; i <= 4; i++ {
+		fmt.Println(rightAns(nums, i), findNum(nums, i))
+		if rightAns(nums, i) == findNum(nums, i) {
+			fmt.Println("success")
+		}
+	}
+
+}

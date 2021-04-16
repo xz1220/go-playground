@@ -88,3 +88,45 @@ func heapfy(nums []int, i, length int) {
 	}
 
 }
+
+// 给定一个有序数组 ns 和元素 e，找到最小的 i 使得 ns[i] >= e，如果不存在，返回 ns.length
+
+// [1, 1, 1, 3], 0 => 0
+// [1, 1, 1, 3], 1 => 0
+// [1, 1, 1, 3], 2 => 3
+// [1, 1, 1, 3], 3 => 3
+// [1, 1, 1, 3], 4 => 4
+
+func rightAns(nums []int, target int) int {
+	var ans int
+	for ans = 0; ans < len(nums) && nums[ans] < target; ans++ {
+	}
+	return ans
+}
+
+func findNum(nums []int, target int) int {
+	// length := len(nums)
+	l, r := 0, len(nums)-1
+	for l < r {
+		mid := (l + r) / 2
+		if nums[mid] < target {
+			l = mid + 1
+		} else {
+			r = mid - 1
+		}
+		// fmt.Println(l, r)
+	}
+
+	if nums[l] < target {
+		return l + 1
+	}
+	// else if nums[(l+r)/2] == target {
+	// 	for i := (l+r)/2 - 1; i >= 0; i-- {
+	// 		if nums[i] == target {
+	// 			ans -= 1
+	// 		}
+	// 	}
+	// 	// return ans
+	// }
+	return l
+}
