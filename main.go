@@ -1,86 +1,63 @@
+/*
+ * @Author: your name
+ * @Date: 2021-09-07 09:28:42
+ * @LastEditTime: 2021-09-18 16:02:51
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /go-playground/main.go
+ */
 package main
 
-import (
-	"bufio"
-	"fmt"
-	"math"
-	"os"
-	"sort"
-	"strconv"
-	"strings"
-)
+import "fmt"
 
-func main() {
-	var workstation []int
-	var sterille []int
-	var sterilleRange []int
-	var numSterille int
+// 给定一个只包含大写英文字母的字符串S，要求你给出对S重新排列的所有不相同的排列数。
+// 如：S为ABA，则不同的排列有ABA、AAB、BAA三种。
 
-	var strWorkstation string
-	var strSterille string
+func findAllPattern(s string) int {
 
-	in := bufio.NewReader(os.Stdin)
-	strWorkstation, _ = in.ReadString('\n')
-	strSterille, _ = in.ReadString('\n')
-
-	workstations := strings.Split(strWorkstation[0:len(strWorkstation)-1], " ")
-	sterilles := strings.Split(strSterille[0:len(strSterille)-1], " ")
-	for _, w := range workstations {
-		num, _ := strconv.Atoi(w)
-		workstation = append(workstation, num)
-	}
-	sort.Ints(workstation)
-	for _, w := range sterilles {
-		num, _ := strconv.Atoi(w)
-		sterille = append(sterille, num)
-
-		// sterilleRange = append(sterilleRange, num)
-		// sterilleRange = append(sterilleRange, num)
-	}
-	sort.Ints(sterille)
-	sort.Ints(sterilleRange)
-	numSterille = len(sterille)
-
-	// 挑选候选集合
-	var ansCandidates []int
-	for _, w := range workstation {
-		for _, s := range sterille {
-			dis := math.Abs(float64(w - s))
-			ansCandidates = append(ansCandidates, int(dis))
-		}
-	}
-	sort.Ints(ansCandidates)
-
-	// 集合筛选
-	var pre int = math.MaxInt64 - 1
-	var ans int
-	var minIndex int = 0
-	for _, candidate := range ansCandidates {
-		if pre == candidate {
+	// 构建map
+	dic := make(map[rune]int)
+	for _, r := range s {
+		if num, ok := dic[r]; ok && num != 0 {
+			dic[r] += 1
 			continue
 		}
 
-		// 更新range
-		for index := 0; index < numSterille; index++ {
-			lower := sterille[index] - (candidate - pre)
-			higher := sterille[index] + (candidate + pre)
-
-			if pre == math.MaxInt64-1 {
-				lower = sterille[index] - candidate
-				higher = sterille[index] + candidate
-			}
-
-			for ; minIndex < len(workstation) && workstation[minIndex] >= lower && workstation[minIndex] <= higher; minIndex++ {
-			}
-		}
-
-		if minIndex == len(workstation) {
-			ans = candidate
-			break
-		}
-
-		pre = candidate
+		dic[r] = 1
 	}
 
-	fmt.Println(ans)
+	// check
+	for key, val := range dic {
+		fmt.Println("key & val :", key, val)
+	}
+
+	// 尝试构建
+	var ans int
+	var dfs func()
+	dfs = func() {
+		// 终止条件
+		var finished bool = true
+		for key, val := range dic {
+			if val != 0 {
+				dic[key] -= 1
+				dfs()
+				dic[key] += 1
+
+				finished = false
+			}
+		}
+
+		if finished {
+			ans += 1
+		}
+	}
+
+	dfs()
+
+	return ans
+}
+
+func main() {
+	c := "ABCDEFGHHA"
+	fmt.Println(findAllPattern(c))
 }
